@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+  <head>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700" rel="stylesheet">
+    <script src="bower_components/d3/d3.min.js"></script>
+    <script src="./js/createSvg.js"></script>
+    <script src="./js/titleLine.js"></script>
+    <script src="./js/logoData.js"></script>
+    <script src="./js/backgroundGroupMove.js"></script>
+    <script src="./js/backgroundSlide.js"></script>
+
+    <script src="./js/foregrounds.js"></script>
+
+    <script src="./js/backgrounds/backgroundOne.js"></script>
+    <script src="./js/backgrounds/backgroundTwo.js"></script>
+    <script src="./js/backgrounds/backgroundThree.js"></script>
+    <script src="./js/backgrounds/backgroundFour.js"></script>
+    <script src="./js/backgrounds/backgroundFive.js"></script>
+    <script src="./js/backgrounds/backgroundSix.js"></script>
+    <script src="./js/backgrounds/backgroundSeven.js"></script>
+    <script src="./js/backgrounds/backgroundEight.js"></script>
+
+    <style>
+      svg {
+        font-family:Poppins;
+        font-weight:600;
+        font-size:4em;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Stranger Things Title Re-Created in d3.js</h1>
+    <div id="container"></div>
+
+    <script>
+
+      var size = {
+        height:720,
+        width:1280
+      }
+      var svg = addSvg();
+      var frameLength = 1000/24;
+      svg.frame
+        .attr("transform","scale(0.75)");
+
+            var darken = svg.frame.append("rect")
+              .attr("x",0)
+              .attr("y",0)
+              .attr("height",720)
+              .attr("width",1280)
+              .attr("fill","black")
+              .attr("opacity",0.1);
+
+
+            function randomizeOpacity() {
+              var newValue = Math.random() / 7;
+              darken
+                .transition()
+                .duration(frameLength * 3)
+                .attr("opacity",newValue)
+                .on('end',randomizeOpacity);
+            }
+
+            function randomizeBlur(svg) {
+              var newValue = 10 + Math.random() * 2.5;
+              svg.blurVal
+                .transition()
+                .attr("stdDeviation",newValue)
+                .duration(frameLength * 12)
+                .on('end',function() {
+                  randomizeBlur(svg);
+                });
+            }
+
+      var playLayer = svg.frame.append("g");
+
+      playLayer
+        .append("rect")
+        .attr("x",0)
+        .attr("y",0)
+        .attr("height",720)
+        .attr("width",1280)
+        .attr("fill","black")
+        .attr("cursor","pointer")
+        .on('click',playTitle);
+
+      playLayer
+        .append("text")
+        .attr("x",640)
+        .attr("y",360)
+        .attr("font-size","2em")
+        .attr("fill","white")
+        .attr("text-anchor","middle")
+        .attr("alignment-baseline","central")
+        .text("Click To Play");
+
+
+
+
+      function playTitle() {
+        console.log("PLAYING!");
+        playLayer.remove();
+
+        randomizeOpacity();
+
+        addTitles(svg);
+        backgroundOne(svg);
+        backgroundTwo(svg);
+        backgroundThree(svg);
+        backgroundFour(svg);
+        backgroundFive(svg);
+        backgroundSeven(svg);
+        backgroundSix(svg);
+        backgroundEight(svg);
+
+        randomizeBlur(svg);
+      }
+
+    </script>
+  </body>
+</html>
