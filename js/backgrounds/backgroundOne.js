@@ -13,12 +13,11 @@ function backgroundOne(svg) {
     .transition()
     .duration(frameLength * (214-79))
     .ease(d3.easeLinear)
-    .attr("transform","translate(0,0) scale(1)")
+    .attr("transform","translate(-120,0) scale(1.1)")
     .transition()
     .duration(0)
     .attr("opacity",0)
     .on("end",function() {
-      console.log("BACKGROUND ONE YEAH");
       backgroundOne.remove();
     });
 
@@ -28,31 +27,35 @@ function backgroundOne(svg) {
     .attr("transform","translate(0,-360)");
 
 
-    bgStage.append("rect")
-      .attr("width",154.75223)
-       .attr("height",738.06677)
-       .attr("x",200.94965)
-       .attr("y",333.09515)
-       .attr("fill","red")
-       .attr("transform","matrix(1,0,-0.18610476,0.98252991,0,0)")
-       .attr("filter","url(#glow)");
+    radialGradient({
+      "svg":svg,
+      "id":"leftFirstBackground",
+      "cx":"30%",
+      "cy":"70%",
+      "stops":[
+        {"offset":"0%","color":"rgb(225,195,68)"},
+        {"offset":"20%","color":"rgb(229,87,40)"},
+        {"offset":"100%","color":"rgb(186,33,33)"},
+        {"offset":"100%","color":"rgb(112,20,20)"}
+      ]
+    });
+
 
     bgStage.append("rect")
       .attr("width",154.75223)
        .attr("height",738.06677)
        .attr("x",200.94965)
        .attr("y",333.09515)
-       .attr("fill","red")
+       .attr("fill","url(#leftFirstBackground)")
        .attr("transform","matrix(1,0,-0.18610476,0.98252991,0,0)")
        .attr("filter","url(#glow)");
-
 
     bgStage.append("rect")
        .attr("width",154.75223)
        .attr("height",738.06677)
        .attr("x",-1079.5192)
        .attr("y",333.09515)
-       .attr("fill","red")
+       .attr("fill","url(#leftFirstBackground)")
        .attr("transform","matrix(-1,0,0.18610476,0.98252991,0,0)")
        .attr("filter","url(#glow)");
 

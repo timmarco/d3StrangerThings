@@ -3,14 +3,22 @@ function addSvg() {
 
   exports = {};
 
-  exports.frame = d3.select("#container")
-    .append("svg")
-    .attr("width",1280)
-    .attr("height",720)
-    .style("background-color","black")
-    .style("border","1px solid black");
+  exports.frameLength = 1000 / 24;
 
-  exports.defs = exports.frame
+  exports.svg = d3.select("#container")
+    .append("svg")
+    .attr("width",960)
+    .attr("height",540)
+    .attr("viewbox","0 0 1280 720")
+    .style("background-color","black");
+
+
+  exports.frame = exports.svg
+    .append("g")
+    .attr("transform","scale(0.75)")
+    .style("border","10px solid black");
+
+  exports.defs = exports.svg
     .append("defs");
 
   exports.glow = exports.defs
@@ -19,7 +27,7 @@ function addSvg() {
 
   exports.blurVal = exports.glow
     .append("feGaussianBlur")
-    .attr("stdDeviation","10")
+    .attr("stdDeviation","45")
     .attr("result","glow");
 
   exports.feMerge = exports.glow
@@ -37,6 +45,17 @@ function addSvg() {
     .append("g");
 
   exports.crewLayer = exports.frame
+    .append("g");
+
+  exports.darken = exports.frame.append("rect")
+    .attr("x",0)
+    .attr("y",0)
+    .attr("height",720)
+    .attr("width",1280)
+    .attr("fill","black")
+    .attr("opacity",0.1);
+
+  exports.playLayer = exports.frame
     .append("g");
 
 

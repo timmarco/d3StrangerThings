@@ -1,122 +1,171 @@
 <!doctype html>
 <html>
   <head>
-    <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700" rel="stylesheet">
+
+    <meta property="og:title" content="Stranger Things Titles Re-Created in D3" />
+    <meta property="og:image" content="https://timmarco.github.io/assets/strangerThings.gif" />
+    <meta property="og:description" content="It's not really what d3 is for, but I tried synching some video and animations." />
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200,400,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Oswald:300,500" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+
     <script src="bower_components/d3/d3.min.js"></script>
-    <script src="./js/createSvg.js"></script>
-    <script src="./js/titleLine.js"></script>
-    <script src="./js/logoData.js"></script>
-    <script src="./js/backgroundGroupMove.js"></script>
-    <script src="./js/backgroundSlide.js"></script>
-
-    <script src="./js/foregrounds.js"></script>
-
-    <script src="./js/backgrounds/backgroundOne.js"></script>
-    <script src="./js/backgrounds/backgroundTwo.js"></script>
-    <script src="./js/backgrounds/backgroundThree.js"></script>
-    <script src="./js/backgrounds/backgroundFour.js"></script>
-    <script src="./js/backgrounds/backgroundFive.js"></script>
-    <script src="./js/backgrounds/backgroundSix.js"></script>
-    <script src="./js/backgrounds/backgroundSeven.js"></script>
-    <script src="./js/backgrounds/backgroundEight.js"></script>
+    <script src="dist/bundle.js"></script>
 
     <style>
+      .overlay {
+        display:none;
+        position:absolute;
+        top:0;
+        left:0;
+        height:100vh;
+        width:100vw;
+        background-color:#e9f6f5;
+        padding-left:4em;
+        padding-right:4em;
+      }
+
+      .overlay h1 {
+        font-size:7em;
+        font-family:Oswald;
+      }
+
+      .overlay p {
+        margin-top:2em;
+        font-size:3em;
+      }
+
+      #showAnyway {
+        width:80%;
+        margin:auto;
+        font-size:4em;
+        margin-top:2em;
+        border:4px solid rgb(224,115,90);
+        color:4px solid rgb(224,115,90);
+        font-family:Oswald;
+        font-weight:300;
+      }
+
       svg {
         font-family:Poppins;
         font-weight:600;
         font-size:4em;
       }
+
+      #mainContainer {
+        width:960px;
+        margin:auto;
+      }
+
+      body {
+        font-family:Source Sans Pro;
+        background-color:#e9f6f5;
+      }
+
+      h2 {
+        font-family:Oswald;
+        margin-bottom:0;
+        padding-bottom:0;
+        font-size:2.25em;
+        margin-top:2em;
+      }
+
+      p {
+        -webkit-margin-before:0;
+        font-size:1.25em;
+      }
     </style>
   </head>
 
   <body>
-    <h1>Stranger Things Title Re-Created in d3.js</h1>
-    <div id="container"></div>
+    <div id="mainContainer">
+      <div id="container"></div>
+
+      <h2>What is this?</h2>
+      <p>This is an attempt to re-create the main titles for the Netflix show <em>Stranger Things</em> using only technologies within the browser. The actual sequence was created by <a href="https://www.imaginaryforces.com" target="_new">Imaginary Forces</a>, and they of course deserve all credit for designing such a cool, iconic intro.</p>
+
+      <p>I set out to do a frame-by-frame recreation of the sequence by using <a href="https://d3js.org/" target="_new">d3.js</a> to test and demonstrate the kinds of effects and animations that are possible with SVG.</p>
+
+      <p>If you've ever used d3, you probably know that it isn't really the optimal tool for this use case. For one thing, d3 is designed for binding data, not for synchronizing multimedia. For another, since I'm using it for SVG here, it isn't feasible to exactly recreate things like textures, particle effects, and lighting (as you might using a video rendering tool like Adobe After Effects).</p>
+
+      <p>That said, d3 &amp; SVG <em>can</em> work together to create some pretty cool effects, and it's pretty impressive how well d3's <code>.transition()</code> method can be used to sync reasonable amounts of elements down to the milisecond.</p>
+
+      <p>If you're interested, you can check out all of the Javascript for this in the <a href="https://www.github.com/timmarco/d3StrangerThings" target="_new">Github Repo</a>.</p>
+    </div>
+
+    <div class="overlay">
+      <h1>Aw Crap!</h1>
+      <p>This is annoying, I know, but this experience doesn't really work well on mobile devices. You can try, but you're much better off trying this on a desktop or laptop.</p>
+      <p>You can try by clicking the button below, but don't say I didn't warn ya.</p>
+      <button id="showAnyway">Show Anyway</button>
+    </div>
 
     <script>
 
-      var size = {
-        height:720,
-        width:1280
+      if(detectmob()) {
+        d3.select(".overlay")
+          .style("display","block");
+
+        d3.select("#showAnyway")
+          .on('click',function() {
+            d3.select(".overlay")
+              .remove();
+
+            initialize();
+          });
+      } else {
+        initialize();
       }
-      var svg = addSvg();
-      var frameLength = 1000/24;
-      svg.frame
-        .attr("transform","scale(0.75)");
 
-            var darken = svg.frame.append("rect")
-              .attr("x",0)
-              .attr("y",0)
-              .attr("height",720)
-              .attr("width",1280)
-              .attr("fill","black")
-              .attr("opacity",0.1);
+      function initialize() {
+        var soundTrack,
+          svg;
 
-
-            function randomizeOpacity() {
-              var newValue = Math.random() / 7;
-              darken
-                .transition()
-                .duration(frameLength * 3)
-                .attr("opacity",newValue)
-                .on('end',randomizeOpacity);
-            }
-
-            function randomizeBlur(svg) {
-              var newValue = 10 + Math.random() * 2.5;
-              svg.blurVal
-                .transition()
-                .attr("stdDeviation",newValue)
-                .duration(frameLength * 12)
-                .on('end',function() {
-                  randomizeBlur(svg);
-                });
-            }
-
-      var playLayer = svg.frame.append("g");
-
-      playLayer
-        .append("rect")
-        .attr("x",0)
-        .attr("y",0)
-        .attr("height",720)
-        .attr("width",1280)
-        .attr("fill","black")
-        .attr("cursor","pointer")
-        .on('click',playTitle);
-
-      playLayer
-        .append("text")
-        .attr("x",640)
-        .attr("y",360)
-        .attr("font-size","2em")
-        .attr("fill","white")
-        .attr("text-anchor","middle")
-        .attr("alignment-baseline","central")
-        .text("Click To Play");
-
-
-
-
-      function playTitle() {
-        console.log("PLAYING!");
-        playLayer.remove();
-
-        randomizeOpacity();
-
-        addTitles(svg);
-        backgroundOne(svg);
-        backgroundTwo(svg);
-        backgroundThree(svg);
-        backgroundFour(svg);
-        backgroundFive(svg);
-        backgroundSeven(svg);
-        backgroundSix(svg);
-        backgroundEight(svg);
-
-        randomizeBlur(svg);
+        soundTrack = new Audio("audiotrack.mp3");
+        soundTrack.onended = clear;
+        svg = addSvg();
+        addPlayCard(svg,soundTrack);
       }
+
+      function clear() {
+        d3.select("#container").selectAll("*")
+          .remove();
+
+        initialize();
+      }
+
+
+      function detectmob() {
+       if( navigator.userAgent.match(/Android/i)
+       || navigator.userAgent.match(/webOS/i)
+       || navigator.userAgent.match(/iPhone/i)
+       || navigator.userAgent.match(/iPad/i)
+       || navigator.userAgent.match(/iPod/i)
+       || navigator.userAgent.match(/BlackBerry/i)
+       || navigator.userAgent.match(/Windows Phone/i)
+       ){
+          return true;
+        }
+       else {
+          return false;
+        }
+      }
+
+
+
 
     </script>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-104067970-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
   </body>
 </html>

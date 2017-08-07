@@ -3,7 +3,7 @@ function backgroundSlide(options) {
 
   returns = {};
 
-  returns.blurGroup = svg.blurLayer
+  returns.blurGroup = options.svg.blurLayer
     .append("g");
 
   returns.blurGroup
@@ -11,27 +11,27 @@ function backgroundSlide(options) {
     .attr("transform",options.transform)
     .attr("display","none")
     .transition()
-    .delay(frameLength * options.start)
+    .delay(options.svg.frameLength * options.start)
     .duration(0)
     .attr("display","block")
     .transition()
-    .duration(options.fadeIn ? frameLength * options.fadeIn : 0)
+    .duration(options.fadeIn ? options.svg.frameLength * options.fadeIn : 0)
     .attr("opacity",1)
     .transition()
     .delay(0)
     .ease(options.transformEase ? options.transformEase : d3.easeLinear)
-    .duration(options.transformDuration ? frameLength * options.transformDuration : 0)
+    .duration(options.transformDuration ? options.svg.frameLength * options.transformDuration : 0)
     .attr("transform",options.endTransform ? options.endTransform : options.transform)
     .transition()
-    .duration(options.fadeOut ? frameLength * options.fadeOut : 0)
-    .delay(frameLength * options.duration)
+    .duration(options.fadeOut ? options.svg.frameLength * options.fadeOut : 0)
+    .delay(options.svg.frameLength * options.duration)
     .attr("opacity",0)
     .transition()
     .duration(0)
     .delay(0)
     .attr("display","none");
 
-  returns.elementGroup = svg.logoLayer
+  returns.elementGroup = options.svg.logoLayer
     .append("g");
 
   returns.elementGroup
@@ -39,20 +39,20 @@ function backgroundSlide(options) {
     .attr("transform",options.transform)
     .attr("display","none")
     .transition()
-    .delay(frameLength * options.start)
+    .delay(options.svg.frameLength * options.start)
     .duration(0)
     .attr("display","block")
     .transition()
-    .duration(options.fadeIn ? frameLength * options.fadeIn : 0)
+    .duration(options.fadeIn ? options.svg.frameLength * options.fadeIn : 0)
     .attr("opacity",1)
     .transition()
     .delay(0)
     .ease(options.transformEase ? options.transformEase : d3.easeLinear)
-    .duration(options.transformDuration ? frameLength * options.transformDuration : 0)
+    .duration(options.transformDuration ? options.svg.frameLength * options.transformDuration : 0)
     .attr("transform",options.endTransform ? options.endTransform : options.transform)
     .transition()
-    .duration(options.fadeOut ? frameLength * options.fadeOut : 0)
-    .delay(frameLength * options.duration)
+    .duration(options.fadeOut ? options.svg.frameLength * options.fadeOut : 0)
+    .delay(options.svg.frameLength * options.duration)
     .attr("opacity",0)
     .transition()
     .duration(0)
